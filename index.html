@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love My PDF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #e53935;
+            --secondary-color: #333;
+            --background-color: #f7f8fc;
+            --card-background: #ffffff;
+            --text-color: #444;
+            --light-text-color: #6c757d;
+            --danger-color: #d32f2f;
+            --success-color: #43a047;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .no-scroll { overflow: hidden; }
+        
+        /* Overlay and Modals */
+        #overlay {
+            position: fixed; display: none; width: 100%; height: 100%; top: 0; left: 0;
+            background-color: rgba(0,0,0,0.6); z-index: 9; cursor: pointer; opacity: 0;
+            transition: opacity 0.3s;
+        }
+        #overlay.show { display: block; opacity: 1; }
+        .modal { 
+            display: none; position: fixed; z-index: 10; left: 50%; top: 50%; transform: translate(-50%, -50%); 
+            width: 90%; max-width: 400px; background-color: var(--card-background); border-radius: var(--border-radius); 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2); padding: 30px; box-sizing: border-box; text-align: center; 
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 { margin: 0; font-weight: 600; }
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: var(--light-text-color);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .back-btn:hover {
+            color: var(--primary-color);
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+            flex-direction: column;
+        }
+        #loading-screen.show {
+            display: flex;
+            opacity: 1;
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--primary-color);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        .loading-text {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        .header {
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 20px;
+            background-color: var(--card-background); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            position: sticky; top: 0; z-index: 5;
+        }
+        .header .logo { font-size: 24px; font-weight: 700; color: var(--secondary-color); }
+        .header .logo .heart { color: var(--primary-color); }
+        .header .user-icon { font-size: 22px; cursor: pointer; color: var(--text-color); transition: color 0.3s ease; }
+        .header .user-icon.logged-in { color: var(--primary-color); }
+        .header .user-icon:hover { color: var(--primary-color); }
+        .header-icons { display: flex; align-items: center; }
+        
+        /* Account Page Links */
+        .account-links {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-top: 15px;
+        }
+        .account-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: var(--text-color);
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            margin-bottom: 8px;
+        }
+        .account-link i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+        .account-link:hover {
+            background-color: #f5f5f5;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f1f1f1;
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .social-link:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Main Content & Tools Grid */
+        .main-content { padding: 30px 15px; }
+        .tools-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+            gap: 20px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        .tool-card-link { text-decoration: none; }
+        .tool-card { 
+            background-color: var(--card-background); border-radius: var(--border-radius); padding: 20px; 
+            box-shadow: var(--shadow); transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            display: flex; align-items: center; height: 100%; box-sizing: border-box;
+        }
+        .tool-card-link:hover .tool-card { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12); }
+        .tool-card .icon { 
+            font-size: 22px; margin-right: 15px; display: flex; align-items: center; justify-content: center; 
+            width: 45px; height: 45px; min-width: 45px; border-radius: 50%; color: #fff; 
+        }
+        .tool-card-text h3 { margin: 0 0 5px 0; font-size: 17px; font-weight: 600; color: var(--text-color); }
+        .tool-card-text p { margin: 0; font-size: 13px; color: var(--light-text-color); line-height: 1.5; }
+        
+        /* Icon Colors */
+        .icon.merge, .icon.split { background-color: #ef5350; }
+        .icon.compress, .icon.pdf-to-excel, .icon.excel-to-pdf { background-color: #26a69a; }
+        .icon.pdf-to-word, .icon.word-to-pdf { background-color: #42a5f5; }
+        .icon.pdf-to-ppt, .icon.ppt-to-pdf, .icon.audio-video { background-color: #ff7043; }
+        .icon.edit, .icon.background-remove { background-color: #ab47bc; }
+        .icon.pdf-to-jpg, .icon.image-to-pdf { background-color: #ffd54f; }
+        .icon.sign, .icon.ocr { background-color: #26c6da; }
+        .icon.watermark, .icon.unlock, .icon.html-to-pdf { background-color: #ec407a; }
+        .icon.rotate, .icon.crop { background-color: #7e57c2; }
+        .icon.image-convert { background-color: #5c6bc0; }
+        
+        /* Modal & Form Styling */
+        .form-group { 
+            margin-bottom: 15px; text-align: left; 
+            position: relative;
+        }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        .password-toggle { position: absolute; top: 38px; right: 15px; cursor: pointer; color: #9e9e9e; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background-color 0.3s, color 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn:disabled { background-color: #bdbdbd; cursor: not-allowed; }
+        .spinner { width: 18px; height: 18px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn-submit { background-color: var(--primary-color); color: white; margin-bottom: 8px; }
+        .btn-submit:hover:not(:disabled) { background-color: #d32f2f; }
+        .btn-secondary { background-color: #f1f1f1; color: var(--text-color); }
+        .btn-secondary:hover { background-color: #e0e0e0; }
+        .switch-form-link { margin-top: 15px; font-size: 13px; color: var(--light-text-color); }
+        .switch-form-link span { color: var(--primary-color); cursor: pointer; font-weight: 500; }
+        .error-message { color: var(--primary-color); font-size: 13px; margin-top: 10px; display: none; }
+        .profile-avatar { width: 70px; height: 70px; background-color: #f1f1f1; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; }
+        .profile-avatar .fa-user { font-size: 35px; color: #ccc; }
+        #accountUserName { font-size: 20px; font-weight: 600; margin: 0; color: var(--secondary-color); }
+        #accountUserEmail { font-size: 13px; color: var(--light-text-color); margin-top: 4px; word-break: break-all; }
+        .modal-divider { border: none; height: 1px; background-color: #eee; margin: 20px 0; }
+        .btn-account-action { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; background-color: transparent; color: var(--text-color); padding: 10px; font-weight: 500; font-size: 14px; border-radius: 8px; border: none; }
+        .btn-account-action:hover { background-color: #f5f5f5; }
+        .btn-danger { color: var(--danger-color); }
+        .btn-danger:hover { background-color: #ffebee; color: var(--danger-color); }
+        .btn-danger i { color: var(--danger-color); }
+        
+        /* Toast Notification */
+        #toast-notification {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            padding: 10px 20px; border-radius: 8px; color: white;
+            font-weight: 500; font-size: 14px; z-index: 100;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s, bottom 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        #toast-notification.show { opacity: 1; visibility: visible; bottom: 30px; }
+        #toast-notification.success { background-color: var(--success-color); }
+        #toast-notification.error { background-color: var(--danger-color); }
+
+        /* Mobile-specific adjustments to show two columns */
+        @media (max-width: 768px) {
+            .header { padding: 12px 15px; }
+            .header .logo { font-size: 22px; }
+            .header .user-icon { font-size: 20px; }
+            .main-content { padding: 20px 10px; }
+            /* Key change for two-column layout */
+            .tools-grid { 
+                grid-template-columns: 1fr 1fr; 
+                gap: 15px; 
+            }
+            .tool-card { padding: 15px; }
+            .tool-card .icon { width: 40px; height: 40px; min-width: 40px; font-size: 20px; }
+            .tool-card-text h3 { font-size: 15px; }
+            .tool-card-text p { font-size: 11px; }
+            .modal { padding: 25px; }
+            .btn { font-size: 14px; padding: 10px; }
+        }
+
+        /* Adjustments for smaller mobile screens to ensure two columns look good */
+        @media (max-width: 480px) {
+            .tool-card-text h3 { font-size: 14px; }
+            .tool-card-text p { font-size: 10px; }
+            .tool-card .icon { margin-right: 10px; }
+            .tool-card {
+                padding: 12px;
+                flex-direction: column; /* Stacks icon and text vertically on very small screens */
+                text-align: center;
+            }
+            .tool-card .icon {
+                margin: 0 auto 10px;
+            }
+            .tool-card-text p {
+                display: none; /* Hides description for a cleaner look on very small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+
+    <div id="overlay"></div>
+
+    <div id="gatewayModal" class="modal">
+        <div class="modal-header"> <h2>Welcome</h2> </div>
+        <button id="openSignupBtn" class="btn btn-submit">Sign Up</button>
+        <button id="openLoginBtn" class="btn btn-secondary">Log In</button>
+    </div>
+
+    <div id="signupModal" class="modal">
+        <div class="modal-header"> <h2>Create Account</h2> </div>
+        <form id="signupForm">
+            <div class="form-group"> <label for="signup-name">Name</label> <input type="text" id="signup-name" required> </div>
+            <div class="form-group"> <label for="signup-email">Email</label> <input type="email" id="signup-email" required> </div>
+            <div class="form-group">
+                <label for="signup-password">Password</label> <input type="password" id="signup-password" required minlength="8">
+                <i class="fas fa-eye password-toggle"></i>
+            </div>
+            <button type="submit" class="btn btn-submit"><span class="btn-text">Sign Up</span></button>
+            <p id="signup-error" class="error-message"></p>
+            <p class="switch-form-link">Already have an account? <span id="switchToLogin">Log In</span></p>
+        </form>
+    </div>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-header"> <h2>Log In</h2> </div>
+        <form id="loginForm">
+            <div class="form-group"> <label for="login-email">Email</label> <input type="email" id="login-email" required> </div>
+            <div class="form-group">
+                <label for="login-password">Password</label> <input type="password" id="login-password" required>
+                 <i class="fas fa-eye password-toggle"></i>
+            </div>
+            <button type="submit" class="btn btn-submit"><span class="btn-text">Log In</span></button>
+            <p id="login-error" class="error-message"></p>
+            <p class="switch-form-link">Don't have an account? <span id="switchToSignup">Sign Up</span></p>
+        </form>
+    </div>
+
+    <div id="accountPage" class="modal">
+        <div class="modal-header">
+            <h2>My Account</h2>
+            <button id="backBtn" class="back-btn"><i class="fas fa-arrow-left"></i> Back</button>
+        </div>
+        <div class="profile-avatar"> <i class="fas fa-user"></i> </div>
+        <h3 id="accountUserName"></h3>
+        <p id="accountUserEmail"></p>
+        
+        <div class="account-links">
+            <a href="#" class="account-link"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
+            <a href="#" class="account-link"><i class="fas fa-file-contract"></i> Terms & Conditions</a>
+            <a href="#" class="account-link"><i class="fas fa-info-circle"></i> About Us</a>
+            <a href="#" class="account-link"><i class="fas fa-comment-dots"></i> Feedback</a>
+        </div>
+        
+        <div class="social-links">
+            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+        </div>
+        
+        <hr class="modal-divider">
+        <button id="logoutBtn" class="btn btn-secondary">Log Out</button>
+        <button id="deleteAccountBtn" class="btn btn-account-action btn-danger" style="margin-top: 10px;">
+            <i class="fas fa-trash-alt"></i> Delete Account
+        </button>
+    </div>
+
+    <div id="deleteAccountModal" class="modal">
+        <div class="modal-header"> <h2>Delete Account</h2> </div>
+        <p style="text-align: left; margin-bottom: 15px; font-size: 14px;">This action is permanent and cannot be undone. All your data will be lost. Please enter your password to confirm deletion.</p>
+        <form id="deleteAccountForm">
+            <div class="form-group">
+                <label for="delete-password">Password</label>
+                <input type="password" id="delete-password" required>
+                <i class="fas fa-eye password-toggle"></i>
+            </div>
+            <button type="submit" class="btn btn-submit"><span class="btn-text">Confirm Deletion</span></button>
+            <button type="button" id="cancelDeleteBtn" class="btn btn-secondary" style="margin-top: 10px;">Cancel</button>
+            <p id="delete-error" class="error-message"></p>
+        </form>
+    </div>
+    
+    <div id="main">
+        <header class="header">
+            <div class="logo">Love My <span class="heart">PDF</span></div>
+            <div class="header-icons">
+                <i id="userIcon" class="fas fa-user-circle user-icon"></i>
+            </div>
+        </header>
+        <main class="main-content">
+            <div class="tools-grid"></div>
+        </main>
+    </div>
+
+    <div id="toast-notification"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+
+    <script>
+        // --- Firebase Configuration (IMPORTANT: Set up Firebase Security Rules) ---
+        const firebaseConfig = {
+          apiKey: "AIzaSyAi1o0odDE2X1dUFcf4gYB5XtZmAeMyaNQ",
+          authDomain: "love-my-0df.firebaseapp.com",
+          projectId: "love-my-0df",
+          storageBucket: "love-my-0df.firebasestorage.app",
+          messagingSenderId: "745722774307",
+          appId: "1:745722774307:web:10ee14794fae5cd2df0296"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // DOM Elements
+        const userIcon = document.getElementById('userIcon');
+        const gatewayModal = document.getElementById('gatewayModal');
+        const signupModal = document.getElementById('signupModal');
+        const loginModal = document.getElementById('loginModal');
+        const accountPage = document.getElementById('accountPage');
+        const deleteAccountModal = document.getElementById('deleteAccountModal');
+        const overlay = document.getElementById('overlay');
+        const signupForm = document.getElementById('signupForm');
+        const loginForm = document.getElementById('loginForm');
+        const deleteAccountForm = document.getElementById('deleteAccountForm');
+        const toolsGrid = document.querySelector('.tools-grid');
+        const accountUserName = document.getElementById('accountUserName');
+        const accountUserEmail = document.getElementById('accountUserEmail');
+        const toast = document.getElementById('toast-notification');
+        const loadingScreen = document.getElementById('loading-screen');
+        const backBtn = document.getElementById('backBtn');
+        const loadingText = document.querySelector('.loading-text');
+
+        const allModals = [gatewayModal, signupModal, loginModal, accountPage, deleteAccountModal];
+
+        // Tools Data with filenames to be updated
+        const toolsData = [
+            { name: 'Image to PDF', description: 'Convert JPG, PNG, and other images to a PDF file.', icon: 'fas fa-file-image', colorClass: 'image-to-pdf', filename: 'image-to-pdf.html' },
+            { name: 'PNG to JPG', description: 'Convert PNG images to JPG format with ease.', icon: 'fas fa-exchange-alt', colorClass: 'image-convert', filename: 'png-to-jpg.html' },
+            { name: 'JPG to PNG', description: 'Convert JPG images to PNG with a transparent background.', icon: 'fas fa-exchange-alt', colorClass: 'image-convert', filename: 'jpg-to-png.html' },
+            { name: 'PDF to Image', description: 'Extract pages from a PDF into high-quality images.', icon: 'fas fa-file-export', colorClass: 'pdf-to-jpg', filename: 'pdf-to-image.html' },
+            { name: 'Background Remove', description: 'Automatically remove the background from any image.', icon: 'fas fa-eraser', colorClass: 'background-remove', filename: 'background-remove.html' },
+            { name: 'Compress Image', description: 'Reduce the file size of images without losing quality.', icon: 'fas fa-compress-alt', colorClass: 'compress', filename: 'compress-image.html' },
+            { name: 'Crop PDF', description: 'Select an area and crop your PDF pages to fit.', icon: 'fas fa-crop', colorClass: 'crop', filename: 'crop-pdf.html' },
+            { name: 'Split PDF', description: 'Separate one page or a whole set for easy conversion.', icon: 'fas fa-cut', colorClass: 'split', filename: 'split-pdf.html' },
+            { name: 'Combine PDF', description: 'Merge multiple PDF files into a single document.', icon: 'fas fa-compress-arrows-alt', colorClass: 'merge', filename: 'combine-pdf.html' },
+            { name: 'PDF to Word', description: 'Convert your PDF to an editable Word document.', icon: 'fas fa-file-word', colorClass: 'pdf-to-word', filename: 'pdf-to-word.html' },
+            { name: 'Video to MP3', description: 'Extract audio from your video files and save as MP3.', icon: 'fas fa-file-audio', colorClass: 'audio-video', filename: 'video-to-mp3.html' },
+            { name: 'Crop Image', description: 'Crop images to the perfect size with our online tool.', icon: 'fas fa-crop-alt', colorClass: 'crop', filename: 'crop-image.html' }
+        ];
+
+        // Generates clickable tool cards with href
+        function generateToolCards() {
+            toolsGrid.innerHTML = toolsData.map(tool => `
+                <a href="${tool.filename}" class="tool-card-link" data-tool-name="${tool.name}">
+                    <div class="tool-card">
+                        <div class="icon ${tool.colorClass}"><i class="${tool.icon}"></i></div>
+                        <div class="tool-card-text">
+                            <h3>${tool.name}</h3>
+                            <p>${tool.description}</p>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+
+            // Add click event listener to show loading screen only for external pages
+            toolsGrid.querySelectorAll('.tool-card-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    // Only show loading if it's an external page
+                    if (link.getAttribute('href') && !link.getAttribute('href').startsWith('#')) {
+                        const toolName = link.getAttribute('data-tool-name');
+                        showLoadingScreen(true, `Loading ${toolName}...`);
+                        
+                        // Allow default navigation to proceed immediately
+                        // No artificial delay needed
+                    }
+                    // Otherwise, let the default behavior happen (e.g., anchor links)
+                });
+            });
+        }
+        
+        function showLoadingScreen(show, message = 'Loading...') {
+            if (show) {
+                loadingText.textContent = message;
+                loadingScreen.classList.add('show');
+                document.body.classList.add('no-scroll');
+            } else {
+                loadingScreen.classList.remove('show');
+                document.body.classList.remove('no-scroll');
+            }
+        }
+
+        function closeAllPopups() {
+            allModals.forEach(modal => modal.style.display = 'none');
+            overlay.classList.remove('show');
+            document.body.classList.remove('no-scroll');
+        }
+
+        function openPopup(element) {
+            closeAllPopups();
+            element.style.display = 'block';
+            overlay.classList.add('show');
+            document.body.classList.add('no-scroll');
+        }
+        
+        function showToast(message, type = 'success') {
+            toast.textContent = message;
+            toast.className = 'show';
+            toast.classList.add(type);
+            setTimeout(() => {
+                toast.className = toast.className.replace('show', '');
+            }, 3000);
+        }
+
+        function toggleButtonLoading(button, isLoading) {
+            const btnText = button.querySelector('.btn-text');
+            if (isLoading) {
+                button.disabled = true;
+                if(btnText) btnText.style.display = 'none';
+                const spinner = document.createElement('div');
+                spinner.className = 'spinner';
+                button.prepend(spinner);
+            } else {
+                button.disabled = false;
+                if(btnText) btnText.style.display = 'inline';
+                const spinner = button.querySelector('.spinner');
+                if(spinner) button.removeChild(spinner);
+            }
+        }
+
+        function updateUIForLoggedInUser(user) {
+            userIcon.classList.add('logged-in');
+            accountUserName.textContent = user.displayName || 'No Name Set';
+            accountUserEmail.textContent = user.email;
+        }
+
+        function updateUIForLoggedOutUser() {
+            userIcon.classList.remove('logged-in');
+            accountUserName.textContent = '';
+            accountUserEmail.textContent = '';
+        }
+        
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                updateUIForLoggedInUser(user);
+            } else {
+                updateUIForLoggedOutUser();
+            }
+        });
+
+        // Refactored form submission handler to reduce code duplication
+        async function handleFormSubmission(form, handler, successMessage, errorMessage) {
+            const submitButton = form.querySelector('button[type="submit"]');
+            const errorElement = form.querySelector('.error-message');
+            errorElement.style.display = 'none';
+            
+            toggleButtonLoading(submitButton, true);
+
+            try {
+                await handler();
+                form.reset();
+                closeAllPopups();
+                showToast(successMessage, 'success');
+            } catch (error) {
+                errorElement.textContent = errorMessage(error);
+                errorElement.style.display = 'block';
+                showToast('Error: ' + errorElement.textContent, 'error');
+            } finally {
+                toggleButtonLoading(submitButton, false);
+            }
+        }
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            handleFormSubmission(
+                signupForm,
+                async () => {
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    await userCredential.user.updateProfile({ displayName: name });
+                    updateUIForLoggedInUser(userCredential.user);
+                },
+                'Account created successfully!',
+                (error) => {
+                    if (error.code === 'auth/email-already-in-use') return 'This email is already in use.';
+                    if (error.code === 'auth/invalid-email') return 'Invalid email address.';
+                    if (error.code === 'auth/weak-password') return 'Password must be at least 8 characters.';
+                    return 'An unexpected error occurred during sign-up.';
+                }
+            );
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            handleFormSubmission(
+                loginForm,
+                () => auth.signInWithEmailAndPassword(email, password),
+                'Logged in successfully!',
+                (error) => {
+                    if (['auth/user-not-found', 'auth/wrong-password', 'auth/invalid-credential'].includes(error.code)) {
+                        return 'Incorrect email or password.';
+                    }
+                    if (error.code === 'auth/invalid-email') return 'Invalid email address.';
+                    return 'An unexpected error occurred during login.';
+                }
+            );
+        });
+
+        // Form submission handler for secure account deletion
+        deleteAccountForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('delete-password').value;
+            const user = auth.currentUser;
+            const errorElement = document.getElementById('delete-error');
+            const submitButton = deleteAccountForm.querySelector('button[type="submit"]');
+            
+            errorElement.style.display = 'none';
+            toggleButtonLoading(submitButton, true);
+
+            if (user && user.email) {
+                try {
+                    // Re-authenticate the user
+                    const credential = firebase.auth.EmailAuthProvider.credential(user.email, password);
+                    await user.reauthenticateWithCredential(credential);
+                    
+                    // If reauthentication is successful, delete the account
+                    await user.delete();
+                    closeAllPopups();
+                    showToast('Your account has been permanently deleted.', 'success');
+                } catch (error) {
+                    errorElement.textContent = 'Incorrect password. Please try again.';
+                    errorElement.style.display = 'block';
+                    showToast('Error: Incorrect password.', 'error');
+                } finally {
+                    toggleButtonLoading(submitButton, false);
+                }
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            auth.signOut();
+            closeAllPopups();
+            showToast('You have been logged out.', 'success');
+        });
+
+        document.getElementById('deleteAccountBtn').addEventListener('click', () => {
+            openPopup(deleteAccountModal);
+        });
+
+        document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+            closeAllPopups();
+        });
+        
+        function setupEventListeners() {
+            userIcon.addEventListener('click', () => {
+                auth.currentUser ? openPopup(accountPage) : openPopup(gatewayModal);
+            });
+
+            overlay.addEventListener('click', closeAllPopups);
+            backBtn.addEventListener('click', closeAllPopups);
+            document.getElementById('openSignupBtn').addEventListener('click', () => openPopup(signupModal));
+            document.getElementById('openLoginBtn').addEventListener('click', () => openPopup(loginModal));
+            document.getElementById('switchToLogin').addEventListener('click', () => openPopup(loginModal));
+            document.getElementById('switchToSignup').addEventListener('click', () => openPopup(signupModal));
+
+            document.querySelectorAll('.password-toggle').forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const passwordInput = toggle.previousElementSibling;
+                    const isPassword = passwordInput.type === 'password';
+                    passwordInput.type = isPassword ? 'text' : 'password';
+                    toggle.classList.toggle('fa-eye');
+                    toggle.classList.toggle('fa-eye-slash');
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToolCards();
+            setupEventListeners();
+            
+            // Hide loading screen when page is fully loaded
+            window.addEventListener('load', () => {
+                showLoadingScreen(false);
+            });
+        });
+    </script>
+</body>
+</html>
