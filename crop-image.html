@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Cropper</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #818cf8;
+            --background-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --border-color: #e5e7eb;
+            --accent-color: #8b5cf6;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --transition: all 0.3s ease;
+            --action-btn-color: #f9fafb;
+            --action-btn-hover: #f3f4f6;
+            --help-color: #6b7280;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            padding: 16px;
+            -webkit-tap-highlight-color: transparent;
+            transition: var(--transition);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(37, 99, 235, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.05) 0%, transparent 25%);
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 28px;
+            padding-top: 60px;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 520px;
+            text-align: center;
+            position: relative;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Back button styles */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--action-btn-color);
+            border: 1px solid var(--border-color);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            background: var(--action-btn-hover);
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn i {
+            color: var(--text-primary);
+            font-size: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1 { 
+            color: var(--text-primary); 
+            font-size: 1.75rem; 
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .help-btn {
+            background: var(--action-btn-color);
+            border: 1px solid var(--border-color);
+            color: var(--help-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .help-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .image-select-box {
+            width: 100%;
+            height: 220px;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 24px;
+            background-color: rgba(249, 250, 251, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-select-box:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(99, 102, 241, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .image-select-icon {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .image-select-text {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+
+        .image-select-subtext {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .select-image-btn {
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.25);
+        }
+
+        .select-image-btn:hover {
+            background: linear-gradient(to right, var(--primary-hover), #9f79f9);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .options-container { 
+            display: none; 
+            margin: 24px 0; 
+            text-align: left; 
+            width: 100%; 
+        }
+        
+        .format-selection { 
+            margin: 20px 0; 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+            background: var(--action-btn-color);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .format-option { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+        
+        .format-option:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .format-option input { 
+            cursor: pointer; 
+            accent-color: var(--primary-color);
+        }
+
+        .aspect-ratio-scroll {
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin: 20px 0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) var(--card-bg);
+        }
+
+        .aspect-ratio-scroll::-webkit-scrollbar { 
+            height: 6px; 
+        }
+        
+        .aspect-ratio-scroll::-webkit-scrollbar-track { 
+            background: var(--card-bg); 
+            border-radius: 3px;
+        }
+        
+        .aspect-ratio-scroll::-webkit-scrollbar-thumb { 
+            background: var(--primary-color); 
+            border-radius: 3px;
+        }
+
+        .aspect-ratio-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-start;
+            min-width: max-content;
+            padding: 6px 0;
+        }
+
+        .aspect-ratio-buttons button {
+            background-color: var(--action-btn-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .aspect-ratio-buttons button:hover { 
+            background-color: var(--action-btn-hover); 
+            border-color: var(--primary-color);
+        }
+
+        .aspect-ratio-buttons button.active {
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        #image-container {
+            width: 100%;
+            margin: 20px auto;
+            display: none;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background-color: var(--action-btn-color);
+            overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            max-height: 60vh;
+            position: relative;
+        }
+
+        #image-to-crop { 
+            display: block; 
+            max-width: 100%; 
+            max-height: 60vh; 
+            margin: 0 auto;
+        }
+        
+        .action-buttons { 
+            display: flex; 
+            justify-content: center; 
+            gap: 12px; 
+            margin-top: 20px; 
+        }
+
+        .action-buttons button {
+            background: var(--action-btn-color);
+            border: 1px solid var(--border-color);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-buttons button:hover { 
+            background: var(--action-btn-hover); 
+            transform: translateY(-2px); 
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .action-buttons svg { 
+            width: 24px; 
+            height: 24px; 
+            fill: var(--text-primary); 
+        }
+
+        .button-group { 
+            margin-top: 24px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 16px; 
+            width: 100%; 
+        }
+
+        input[type="file"] { 
+            display: none; 
+        }
+
+        .custom-file-upload, #download-btn {
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .custom-file-upload:hover, #download-btn:hover:not(:disabled) { 
+            background: linear-gradient(to right, var(--primary-hover), #9f79f9);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+        }
+        
+        #change-image-btn { 
+            background: var(--action-btn-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        #change-image-btn:hover { 
+            background: var(--action-btn-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        #download-btn:disabled { 
+            background: var(--action-btn-color); 
+            color: var(--text-secondary);
+            cursor: not-allowed; 
+            transform: none; 
+            box-shadow: none;
+            border: 1px solid var(--border-color);
+        }
+
+        .loading { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(255, 255, 255, 0.9); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 10; 
+            opacity: 0; 
+            pointer-events: none; 
+            transition: opacity 0.3s ease; 
+            border-radius: 12px;
+        }
+        
+        .loading.active { 
+            opacity: 1; 
+            pointer-events: all; 
+        }
+        
+        .spinner { 
+            width: 40px; 
+            height: 40px; 
+            border: 4px solid rgba(99, 102, 241, 0.2); 
+            border-top: 4px solid var(--primary-color); 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+        }
+        
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        
+        .toast { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%; 
+            transform: translateX(-50%) translateY(100px); 
+            background-color: var(--card-bg); 
+            color: var(--text-primary); 
+            padding: 14px 24px; 
+            border-radius: 10px; 
+            z-index: 1000; 
+            opacity: 0; 
+            transition: transform 0.3s ease, opacity 0.3s ease; 
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toast.show { 
+            opacity: 1; 
+            transform: translateX(-50%) translateY(0); 
+        }
+        
+        .toast i {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 540px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 28px;
+            position: relative;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: var(--action-btn-color);
+            border: 1px solid var(--border-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .instruction-step {
+            display: flex;
+            margin-bottom: 24px;
+            align-items: flex-start;
+            background: var(--action-btn-color);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .step-number {
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            flex-shrink: 0;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .step-content {
+            text-align: left;
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .tip {
+            background: linear-gradient(to right, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 24px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .tip-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tip-title i {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .container { padding: 20px 16px; padding-top: 60px; }
+            h1 { font-size: 1.5rem; }
+            .custom-file-upload, #download-btn { font-size: 15px; padding: 14px 20px; }
+            .aspect-ratio-buttons button { font-size: 13px; padding: 10px 16px; }
+            #image-container { max-height: 55vh; }
+            .modal { padding: 20px; }
+            .instruction-step { flex-direction: column; }
+            .step-number { margin-bottom: 12px; margin-right: 0; }
+            .format-selection { flex-wrap: wrap; justify-content: center; }
+            .back-btn {
+                top: 15px;
+                left: 15px;
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        /* Cropper.js customizations */
+        .cropper-view-box,
+        .cropper-face {
+            border-radius: 8px;
+        }
+
+        .cropper-view-box {
+            outline: 2px solid var(--primary-color);
+            outline-color: rgba(99, 102, 241, 0.8);
+        }
+
+        .cropper-line {
+            background-color: var(--primary-color);
+        }
+
+        .cropper-point {
+            background-color: var(--primary-color);
+            width: 8px;
+            height: 8px;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" id="back-btn" title="Go Back">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Image Cropper</h1>
+            <button class="help-btn" id="help-btn" aria-label="How to use">
+                <i class="fas fa-question"></i>
+            </button>
+        </div>
+
+        <div class="image-select-box" id="image-select-box">
+            <div class="image-select-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="image-select-text">Select an image</div>
+            <div class="image-select-subtext">Click or drop your image here</div>
+            <button class="select-image-btn" id="select-image-btn">Select Image</button>
+            <input type="file" id="image-input" accept="image/jpeg, image/png, image/webp">
+        </div>
+
+        <div id="image-container">
+            <img id="image-to-crop">
+            <div class="loading" id="loading-indicator">
+                <div class="spinner"></div>
+            </div>
+        </div>
+
+        <div id="options-container" class="options-container">
+            <div class="format-selection">
+                <label class="format-option"><input type="radio" name="format" value="png" checked> PNG</label>
+                <label class="format-option"><input type="radio" name="format" value="jpeg"> JPG</label>
+            </div>
+            
+            <div class="aspect-ratio-scroll">
+                <div class="aspect-ratio-buttons">
+                    <button data-aspect-ratio="NaN" class="active">Freeform</button>
+                    <button data-aspect-ratio="1">1:1</button>
+                    <button data-aspect-ratio="1.7777777777777777">16:9</button>
+                    <button data-aspect-ratio="0.5625">9:16</button>
+                    <button data-aspect-ratio="0.75">3:4</button>
+                    <button data-aspect-ratio="1.3333333333333333">4:3</button>
+                    <button data-aspect-ratio="0.8">4:5</button>
+                    <button data-aspect-ratio="1.25">5:4</button>
+                    <button data-aspect-ratio="2">2:1</button>
+                    <button data-aspect-ratio="0.5">1:2</button>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                 <button id="rotate-btn" title="Rotate Left">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M10.828 1.172a.5.5 0 0 1 .354.146l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 1 1-.708-.708L12.793 5H5.5A3.5 3.5 0 0 0 2 8.5v8A3.5 3.5 0 0 0 5.5 20h11A3.5 3.5 0 0 0 20 16.5v-8A3.5 3.5 0 0 0 16.5 5h-1a.5.5 0 0 1 0-1h1A4.5 4.5 0 0 1 21 8.5v8A4.5 4.5 0 0 1 16.5 21h-11A4.5 4.5 0 0 1 1 16.5v-8A4.5 4.5 0 0 1 5.5 4h7.293l-1.647-1.646a.5.5 0 0 1 .146-.354Z"/></svg>
+                 </button>
+                 <button id="reset-btn" title="Reset">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 4a8 8 0 1 0 5.657 13.657a.5.5 0 0 1-.707-.707A7 7 0 1 1 12 5a7 7 0 0 1 4.95 2.05a.5.5 0 0 1-.708.707l-2.12-2.121a.5.5 0 0 1 0-.707l3-3a.5.5 0 0 1 .707 0l3 3a.5.5 0 0 1 0 .707L17.05 8.05a.5.5 0 0 1-.707-.707A8.001 8.001 0 0 0 12 4Z"/></svg>
+                 </button>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button id="change-image-btn" class="custom-file-upload" style="display: none;">
+                <i class="fas fa-exchange-alt"></i> Change Image
+            </button>
+            <button id="download-btn" disabled>
+                <i class="fas fa-download"></i> Download Cropped Image
+            </button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="modal-overlay" id="help-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">How to Use Image Cropper</h2>
+                <button class="close-modal" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">Select an Image</div>
+                    <div class="step-description">Click the image selection box to choose an image from your device.</div>
+                </div>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">Choose Aspect Ratio</div>
+                    <div class="step-description">Select from various aspect ratio options or use "Freeform" for custom cropping.</div>
+                </div>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">Adjust Crop Area</div>
+                    <div class="step-description">Drag the corners or edges of the crop box to adjust the cropping area.</div>
+                </div>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">Rotate if Needed</div>
+                    <div class="step-description">Use the rotate button to adjust the image orientation.</div>
+                </div>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <div class="step-title">Download Your Image</div>
+                    <div class="step-description">Choose your preferred format (PNG or JPG) and click "Download Cropped Image".</div>
+                </div>
+            </div>
+            
+            <div class="tip">
+                <div class="tip-title"><i class="fas fa-lightbulb"></i> Pro Tip</div>
+                <p>Use the Freeform option for custom cropping. You can also rotate the image for a perfect fit.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
+    <script>
+        const imageInput = document.getElementById('image-input');
+        const imageSelectBox = document.getElementById('image-select-box');
+        const selectImageBtn = document.getElementById('select-image-btn');
+        const imageToCrop = document.getElementById('image-to-crop');
+        const imageContainer = document.getElementById('image-container');
+        const downloadBtn = document.getElementById('download-btn');
+        const optionsContainer = document.getElementById('options-container');
+        const aspectRatioButtons = document.querySelectorAll('.aspect-ratio-buttons button');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const toast = document.getElementById('toast');
+        const rotateBtn = document.getElementById('rotate-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const changeImageBtn = document.getElementById('change-image-btn');
+        const helpBtn = document.getElementById('help-btn');
+        const helpModal = document.getElementById('help-modal');
+        const closeModal = document.getElementById('close-modal');
+        const backBtn = document.getElementById('back-btn');
+        
+        let cropper = null;
+        let currentFileName = '';
+        let currentObjectUrl = null;
+
+        function showToast(message, duration = 3000) {
+            toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), duration);
+        }
+
+        function toggleHelpModal() {
+            helpModal.classList.toggle('active');
+        }
+
+        // Event listeners
+        helpBtn.addEventListener('click', toggleHelpModal);
+        closeModal.addEventListener('click', toggleHelpModal);
+        helpModal.addEventListener('click', (e) => {
+            if (e.target === helpModal) toggleHelpModal();
+        });
+
+        imageSelectBox.addEventListener('click', () => {
+            imageInput.click();
+        });
+
+        selectImageBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent triggering the parent click event
+            imageInput.click();
+        });
+
+        // Added back button event listener here
+        backBtn.addEventListener('click', () => {
+            window.history.back();
+        });
+
+        // Drag and drop functionality
+        imageSelectBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            imageSelectBox.style.borderColor = 'var(--primary-color)';
+            imageSelectBox.style.backgroundColor = 'rgba(99, 102, 241, 0.05)';
+        });
+
+        imageSelectBox.addEventListener('dragleave', () => {
+            imageSelectBox.style.borderColor = 'var(--border-color)';
+            imageSelectBox.style.backgroundColor = 'rgba(249, 250, 251, 0.6)';
+        });
+
+        imageSelectBox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            imageSelectBox.style.borderColor = 'var(--border-color)';
+            imageSelectBox.style.backgroundColor = 'rgba(249, 250, 251, 0.6)';
+            
+            if (e.dataTransfer.files.length) {
+                handleImageFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        changeImageBtn.addEventListener('click', () => {
+            resetUI();
+            imageInput.click();
+        });
+
+        function handleImageFile(file) {
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showToast('Please select an image file');
+                return;
+            }
+            
+            if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+            
+            currentFileName = file.name.split('.').slice(0, -1).join('.');
+            loadingIndicator.classList.add('active');
+            
+            currentObjectUrl = URL.createObjectURL(file);
+            
+            imageToCrop.onload = () => {
+                imageSelectBox.style.display = 'none';
+                imageContainer.style.display = 'block';
+                optionsContainer.style.display = 'block';
+                downloadBtn.disabled = false;
+                changeImageBtn.style.display = 'block';
+
+                // Use a small delay to ensure the image is fully rendered
+                setTimeout(initCropper, 100);
+            };
+            
+            imageToCrop.onerror = () => {
+                loadingIndicator.classList.remove('active');
+                showToast('Error loading image');
+                resetUI();
+            };
+            
+            imageToCrop.src = currentObjectUrl;
+        }
+
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files?.[0];
+            handleImageFile(file);
+        });
+
+        function initCropper() {
+            if (cropper) cropper.destroy();
+            
+            const activeRatioButton = document.querySelector('.aspect-ratio-buttons button.active');
+            const aspectRatioValue = parseFloat(activeRatioButton.dataset.aspectRatio);
+            
+            cropper = new Cropper(imageToCrop, {
+                aspectRatio: isNaN(aspectRatioValue) ? NaN : aspectRatioValue,
+                viewMode: 1, 
+                dragMode: 'move', 
+                responsive: true, 
+                guides: true,
+                center: true, 
+                highlight: false, 
+                cropBoxMovable: true, 
+                cropBoxResizable: true,
+                ready: () => {
+                    loadingIndicator.classList.remove('active');
+                }
+            });
+        }
+        
+        function resetUI() {
+            if (cropper) { 
+                cropper.destroy(); 
+                cropper = null; 
+            }
+            if (currentObjectUrl) { 
+                URL.revokeObjectURL(currentObjectUrl); 
+                currentObjectUrl = null; 
+            }
+            
+            imageSelectBox.style.display = 'flex';
+            imageContainer.style.display = 'none';
+            optionsContainer.style.display = 'none';
+            downloadBtn.disabled = true;
+            imageInput.value = '';
+            changeImageBtn.style.display = 'none';
+        }
+
+        aspectRatioButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                aspectRatioButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                if (cropper) {
+                    const ratio = parseFloat(this.dataset.aspectRatio);
+                    cropper.setAspectRatio(isNaN(ratio) ? NaN : ratio);
+                }
+            });
+        });
+
+        rotateBtn.addEventListener('click', () => { 
+            if (cropper) cropper.rotate(-90); 
+        });
+
+        resetBtn.addEventListener('click', () => { 
+            if (cropper) cropper.reset(); 
+        });
+
+        downloadBtn.addEventListener('click', function() {
+            if (!cropper) return;
+            
+            loadingIndicator.classList.add('active');
+            
+            const selectedFormat = document.querySelector('input[name="format"]:checked').value;
+            const quality = selectedFormat === 'png' ? 1.0 : 0.92;
+            
+            setTimeout(() => {
+                try {
+                    // Get the cropped canvas with options to avoid blank canvas issues
+                    const canvas = cropper.getCroppedCanvas({
+                        minWidth: 64,
+                        minHeight: 64,
+                        maxWidth: 4096,
+                        maxHeight: 4096,
+                        imageSmoothingEnabled: true,
+                        imageSmoothingQuality: 'high'
+                    });
+                    
+                    if (!canvas) {
+                        throw new Error('Could not create canvas from the cropped area');
+                    }
+                    
+                    // Check if the canvas is valid
+                    if (canvas.width === 0 || canvas.height === 0) {
+                        throw new Error('Cropped area is too small or invalid');
+                    }
+                    
+                    // Convert canvas to blob
+                    canvas.toBlob((blob) => {
+                        if (!blob) {
+                            loadingIndicator.classList.remove('active');
+                            showToast('Error creating image from the cropped area');
+                            return;
+                        }
+                        
+                        // Create download URL and trigger download
+                        const downloadUrl = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = downloadUrl;
+                        a.download = `${currentFileName || 'cropped-image'}.${selectedFormat}`;
+                        document.body.appendChild(a);
+                        a.click();
+                        
+                        // Clean up
+                        setTimeout(() => {
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(downloadUrl);
+                            loadingIndicator.classList.remove('active');
+                            showToast('Image downloaded successfully!');
+                        }, 100);
+                    }, `image/${selectedFormat}`, quality);
+
+                } catch (error) {
+                    console.error('Download error:', error);
+                    loadingIndicator.classList.remove('active');
+                    showToast('Error: ' + error.message);
+                }
+            }, 200);
+        });
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => { 
+                if (cropper) cropper.resize(); 
+            }, 250);
+        });
+        
+        window.addEventListener('beforeunload', () => {
+            if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+        });
+    </script>
+</body>
+</html>
