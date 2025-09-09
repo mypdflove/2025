@@ -662,9 +662,7 @@
             setupEventListeners();
             
             // Hide loading screen when page is fully loaded
-            window.addEventListener('load', () => {
-                showLoadingScreen(false);
-            });
+            window.addEventListener('pageshow', (event) => { showLoadingScreen(false); });
         });
     </script>
 </body>
