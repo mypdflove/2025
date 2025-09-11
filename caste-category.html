@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>बिहार जाति सूचक - संपूर्ण सूची</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind:wght@400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #818cf8;
+            --background-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --border-color: #e5e7eb;
+            --accent-color: #8b5cf6;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --transition: all 0.3s ease;
+            --action-btn-color: #f9fafb;
+            --action-btn-hover: #f3f4f6;
+            --help-color: #6b7280;
+            
+            /* Bihar Caste's category colors */
+            --sc-color: #FF6B6B;
+            --st-color: #4ECDC4;
+            --obc-color: #FFA73F;
+            --general-color: #6A89CC;
+            --ebc-color: #9b59b6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Poppins', 'Hind', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            padding: 16px;
+            transition: var(--transition);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(37, 99, 235, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.05) 0%, transparent 25%);
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 28px;
+            padding-top: 60px;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            position: relative;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .back-btn, .help-btn {
+            position: absolute;
+            top: 20px;
+            width: 44px;
+            height: 44px;
+            background: var(--action-btn-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            z-index: 100;
+        }
+
+        .back-btn { left: 20px; }
+        .help-btn { right: 20px; }
+
+        .back-btn:hover, .help-btn:hover {
+            background: var(--action-btn-hover);
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn i {
+            color: var(--text-primary);
+            font-size: 20px;
+        }
+        
+        .help-btn i {
+            color: var(--help-color);
+            font-size: 1.2rem;
+        }
+        
+        .help-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            color: var(--text-primary);
+            font-size: 1.75rem;
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .description {
+            color: var(--text-secondary);
+            margin-top: 10px;
+            font-size: 0.95rem;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 16px;
+            appearance: none;
+            background-color: var(--action-btn-color);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%234A90E2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        #caste-list-container {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .category-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid;
+            color: var(--text-primary);
+        }
+
+        .sc-title { color: var(--sc-color); border-color: var(--sc-color); }
+        .st-title { color: var(--st-color); border-color: var(--st-color); }
+        .obc-title { color: var(--obc-color); border-color: var(--obc-color); }
+        .general-title { color: var(--general-color); border-color: var(--general-color); }
+        .ebc-title { color: var(--ebc-color); border-color: var(--ebc-color); }
+
+        #caste-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        }
+
+        .caste-item {
+            background-color: var(--action-btn-color);
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .caste-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sc-item { border-left: 4px solid var(--sc-color); }
+        .st-item { border-left: 4px solid var(--st-color); }
+        .obc-item { border-left: 4px solid var(--obc-color); }
+        .general-item { border-left: 4px solid var(--general-color); }
+        .ebc-item { border-left: 4px solid var(--ebc-color); }
+        
+        .sc-item:hover { background-color: rgba(255, 107, 107, 0.05); }
+        .st-item:hover { background-color: rgba(78, 205, 196, 0.05); }
+        .obc-item:hover { background-color: rgba(255, 167, 63, 0.05); }
+        .general-item:hover { background-color: rgba(106, 137, 204, 0.05); }
+        .ebc-item:hover { background-color: rgba(155, 89, 182, 0.05); }
+
+        .placeholder-text {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .stats {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 540px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 28px;
+            position: relative;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: var(--action-btn-color);
+            border: 1px solid var(--border-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .instruction-step {
+            display: flex;
+            margin-bottom: 24px;
+            align-items: flex-start;
+            background: var(--action-btn-color);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .step-number {
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            flex-shrink: 0;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .step-content {
+            text-align: left;
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .tip {
+            background: linear-gradient(to right, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 24px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .tip-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tip-title i {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px; padding-top: 60px; }
+            h1 { font-size: 24px; }
+            #caste-list { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+            .back-btn { left: 15px; }
+            .help-btn { right: 15px; }
+            .modal { padding: 20px; }
+            .instruction-step { flex-direction: column; }
+            .step-number { margin-bottom: 12px; margin-right: 0; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 20px; }
+            .description { font-size: 0.9rem; }
+            #caste-list { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+            .caste-item { padding: 10px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" id="back-btn" title="Go Back">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+    <button class="help-btn" id="help-btn" aria-label="How to use">
+        <i class="fas fa-question"></i>
+    </button>
+
+<div class="container">
+    <div class="header">
+        <h1>बिहार जाति सूचक - संपूर्ण सूची</h1>
+        <p class="description">बिहार की सभी प्रमुख जातियों की व्यापक सूची। श्रेणी चुनकर संबंधित जातियों को देखें।</p>
+    </div>
+    
+    <div class="input-group">
+        <label for="category-select">श्रेणी चुनें:</label>
+        <select id="category-select">
+            <option value="">-- श्रेणी चुनें --</option>
+            <option value="General">General (सामान्य वर्ग)</option>
+            <option value="OBC">OBC (अन्य पिछड़ा वर्ग)</option>
+            <option value="EBC">EBC (अत्यंत पिछड़ा वर्ग)</option>
+            <option value="SC">SC (अनुसूचित जाति)</option>
+            <option value="ST">ST (अनुसूचित जनजाति)</option>
+            <option value="All">सभी जातियाँ देखें</option>
+        </select>
+    </div>
+
+    <div id="caste-list-container">
+        <p class="placeholder-text" id="placeholder">कृपया ऊपर एक श्रेणी चुनें।</p>
+        <div id="category-title" class="category-title" style="display: none;"></div>
+        <ul id="caste-list"></ul>
+        <div id="stats" class="stats" style="display: none;"></div>
+    </div>
+</div>
+
+    <div class="modal-overlay" id="help-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">कैसे उपयोग करें</h2>
+                <button class="close-modal" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">श्रेणी चुनें</div>
+                    <div class="step-description">ड्रॉपडाउन मेनू से अपनी पसंद की जाति श्रेणी चुनें, जैसे 'SC' या 'OBC'।</div>
+                </div>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">जातियों की सूची देखें</div>
+                    <div class="step-description">श्रेणी चुनने के बाद, उस श्रेणी की सभी जातियों की सूची नीचे प्रदर्शित होगी।</div>
+                </div>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">सभी जातियां देखें</div>
+                    <div class="step-description">एक ही बार में सभी श्रेणियों की जातियों को देखने के लिए 'सभी जातियाँ देखें' विकल्प चुनें।</div>
+                </div>
+            </div>
+            
+            <div class="tip">
+                <div class="tip-title"><i class="fas fa-lightbulb"></i> सुझाव</div>
+                <p>यह सूची बिहार सरकार द्वारा आधिकारिक रूप से मान्यता प्राप्त जातियों पर आधारित है और केवल जानकारी के उद्देश्य से है।</p>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const casteData = {
+        "General": [
+            "ब्राह्मण", "राजपूत", "भूमिहार", "कायस्थ", "वैश्य", "अग्रवाल", "अम्बष्ठ", "बैद्य", "खत्री", "सैकड़ों", 
+            "पाठक", "शर्मा", "मिश्रा", "चौधरी", "श्रीवास्तव", "सिंह", "त्रिपाठी", "त्यागी", "उपाध्याय", "वर्मा", 
+            "वाजपेयी", "अवस्थी", "द्विवेदी", "गोस्वामी", "झा", "ठाकुर", "गुप्ता", "गौड़", "मेहता", "पांडे", "तिवारी",
+            "राय", "साहू", "जैन", "मारवाड़ी", "सोनी", "बंसल", "गोयल", "अरोड़ा", "मित्तल", "जिंदल", "बजाज", "बिरला"
+        ],
+        "OBC": [
+            "यादव (अहीर)", "कुर्मी", "कोइरी (कुशवाहा)", "बनिया", "तेली", "पटेल", "कानू", "कहार", "कलवार", 
+            "कमकर", "गद्दी", "गडरिया", "गोला", "गुर्जर", "जोशी", "दहेज", "नाई", "नागवंशी", "पड़हिया", 
+            "पाल (भेड़िहार)", "लोहार", "अंसारी", "मोमिन (जुलाहा)", "सैयद", "मल्लाह", "निषाद", "केवट", "कश्यप",
+            "कुम्हार", "बढ़ई", "सुनार", "लोहार", "तमोली", "तत्मा", "तुरी", "तेली", "थाथर", "दर्जी", "धोबी",
+            "नट", "नटवा", "नायक", "पासी", "पिंडारा", "बिंद", "भर", "भुइयां", "मुरी", "राजभर", "राजपासी"
+        ],
+        "EBC": [
+            "अघोरी", "अमात", "अरसाल", "अर्कस", "अंगोरी", "अंधकार", "इद्रीस", "ईरानी", "उरांव", "ऊंटवाला", 
+            "कसाई", "कमरिया", "कमाल", "कंजर", "कपाली", "कुम्हार", "कैकल", "कोच", "खटवे", "खोलिया", 
+            "गंगई", "गंजी", "गुलगुलिया", "गुलजार", "चक्की", "चपोता", "चोपाल", "छत्री", "जाट", "जोगारा", 
+            "झिंझिया", "तिवारी", "दर्जी", "धनिया", "धुनिया", "नायके", "नाल", "नालबंध", "नुनिया", "पंडारा", 
+            "पचइया", "पड़रिया", "पान", "पिनारा", "प्रजापति", "बरई", "बढई", "बेल्दार", "बिन्द", "बोट", "भर", 
+            "भूटिया", "भूजा", "मल्लाह", "मोची", "रजक (धोबी)", "राइन", "रावत", "लोधी", "सुनार", "हलवाई", 
+            "हेला", "माली", "मांझी", "बैगी", "बैसवार", "बेसरा", "भरथरी", "भट्टी", "भोई", "चमरोट", "चिक",
+            "डफाली", "डोम", "गडरिया", "गरनाला", "गोंड", "हलखोर", "हरगुजर", "कच्छी", "कलंदर", "कंजर", "कपडी",
+            "करिहान", "केवट", "खरवार", "खातिक", "कोरी", "कुरमी", "लखेरा", "मदारी", "महतो", "मालकार", "मांझी",
+            "मेहरा", "नट", "नायक", "निषाद", "पाल", "पंजवार", "पासी", "पटवा", "राइकवार", "राजवंशी", "रामगढ़िया",
+            "सहरिया", "सांसी", "सरकार", "सिकलीगर", "सिंघिक", "सुरजापुरी", "तमोली", "तुरी", "वाल्मीकि"
+        ],
+        "SC": [
+            "अस्पुर", "कौड़ी", "कुरमी", "केवट", "खोदा", "चमार", "चटवाल", "छूड़िया", "दंत", "दुसाध", "धोबी", 
+            "धंगार", "धीमान", "धीवर", "डोम", "डोरा", "नरम", "पासी", "पंडोरा", "पांडु", "पोरिया", "पाटनकर", 
+            "रैदास", "रविदास", "रजक", "सांसी", "सोनार", "हलवाई", "मदारी", "महार", "मुसहर", "माली", "मांझी", 
+            "नाई", "पासवान", "भंगी", "खटिक", "धानुक", "गद्दी", "गोंड", "हो", "कोल", "कोरवा", "मुंडा", "संथाल",
+            "उरांव", "चेरो", "खरवार", "खड़िया", "पहाड़िया", "बैगा", "भील", "बिरहोर", "बिरजिया", "गोरैत", "हिल खड़िया",
+            "करकू", "खैरवार", "कोडाकू", "महली", "माल पहाड़िया", "नागेसिया", "पताल", "सवर", "असुर", "बिरहुल", "सावर",
+            "बथुडी", "भुइयां", "चिक बरिक", "दुसाध", "घासी", "हलालखोर", "हज्जाम", "कनjar", "कपारी", "लालबेगी",
+            "मांझी", "मुची", "नट", "पटेल", "रजवार", "सिकलीगर", "तुरी"
+        ],
+        "ST": [
+            "संथाल", "मुंडा", "हो", "उरांव", "लोहरा", "चेरो", "खरवार", "खड़िया", "खोंड", "सौरिया पहाड़िया", 
+            "बैगा", "बथुडी", "भील", "बिरहोर", "बिरजिया", "गोंड", "गोरैत", "हिल खड़िया", "करकू", "खैरवार", 
+            "कोडाकू", "कोल", "कोरवा", "कोया", "महली", "माल पहाड़िया", "नागेसिया", "पहाड़िया", "पताल", "सवर",
+            "असुर", "बिरहुल", "सावर", "बैगा", "भील मीना", "भुइयां", "बिरजिया", "चेरो", "गोंड", "हो", "खरवार",
+            "खोंड", "कोल", "कोरवा", "कोरकू", "महली", "माल पहाड़िया", "मुंडा", "नागेसिया", "ओरांव", "पहाड़िया",
+            "संथाल", "सवर", "थारू"
+        ]
+    };
+
+    // Remove duplicates from each category
+    Object.keys(casteData).forEach(category => {
+        casteData[category] = [...new Set(casteData[category])];
+    });
+
+    // Get DOM elements
+    const categorySelect = document.getElementById('category-select');
+    const casteList = document.getElementById('caste-list');
+    const placeholderText = document.getElementById('placeholder');
+    const categoryTitle = document.getElementById('category-title');
+    const statsElement = document.getElementById('stats');
+    const backBtn = document.getElementById('back-btn');
+    const helpBtn = document.getElementById('help-btn');
+    const helpModal = document.getElementById('help-modal');
+    const closeModal = document.getElementById('close-modal');
+
+    // Add event listener for the dropdown change
+    categorySelect.addEventListener('change', (event) => {
+        const selectedCategory = event.target.value;
+        displayCastes(selectedCategory);
+    });
+
+    // Event listeners for new buttons
+    backBtn.addEventListener('click', () => {
+        // This will take the user back to the previous page in their browser history.
+        window.history.back();
+    });
+
+    helpBtn.addEventListener('click', () => {
+        helpModal.classList.add('active');
+    });
+
+    closeModal.addEventListener('click', () => {
+        helpModal.classList.remove('active');
+    });
+
+    helpModal.addEventListener('click', (e) => {
+        if (e.target === helpModal) {
+            helpModal.classList.remove('active');
+        }
+    });
+    
+    // Check for changes in history to update dropdown on back/forward
+    window.addEventListener('popstate', () => {
+      // Re-render the list based on the new URL state if needed
+      // For this simple example, we'll just clear the dropdown
+      categorySelect.value = '';
+      displayCastes('');
+    });
+
+
+    /**
+     * Displays castes based on the selected category.
+     * @param {string} category - The selected category (e.g., 'SC', 'OBC', 'All').
+     */
+    function displayCastes(category) {
+        // Clear previous list items
+        casteList.innerHTML = '';
+        categoryTitle.style.display = 'none';
+        statsElement.style.display = 'none';
+        
+        // Hide placeholder text if a category is selected
+        if (category) {
+            placeholderText.style.display = 'none';
+            
+            if (category === 'All') {
+                // Show all categories
+                let totalCastes = 0;
+                const sortedCategories = ['General', 'OBC', 'EBC', 'SC', 'ST'];
+                
+                sortedCategories.forEach(cat => {
+                    const castes = casteData[cat];
+                    totalCastes += castes.length;
+                    
+                    // Create category title
+                    const titleDiv = document.createElement('div');
+                    titleDiv.className = `category-title ${cat.toLowerCase()}-title`;
+                    
+                    switch(cat) {
+                        case 'General': titleDiv.textContent = 'सामान्य वर्ग (General)'; break;
+                        case 'OBC': titleDiv.textContent = 'अन्य पिछड़ा वर्ग (OBC)'; break;
+                        case 'EBC': titleDiv.textContent = 'अत्यंत पिछड़ा वर्ग (EBC)'; break;
+                        case 'SC': titleDiv.textContent = 'अनुसूचित जाति (SC)'; break;
+                        case 'ST': titleDiv.textContent = 'अनुसूचित जनजाति (ST)'; break;
+                    }
+                    
+                    casteList.appendChild(titleDiv);
+                    
+                    // Create caste items for this category
+                    castes.forEach(caste => {
+                        const li = document.createElement('li');
+                        li.className = `caste-item ${cat.toLowerCase()}-item`;
+                        li.textContent = caste;
+                        casteList.appendChild(li);
+                    });
+                });
+                
+                // Show statistics
+                statsElement.style.display = 'block';
+                statsElement.textContent = `कुल जातियाँ: ${totalCastes} (General: ${casteData.General.length}, OBC: ${casteData.OBC.length}, EBC: ${casteData.EBC.length}, SC: ${casteData.SC.length}, ST: ${casteData.ST.length})`;
+            } else {
+                // Show specific category
+                const castes = casteData[category];
+                
+                // Set category title
+                categoryTitle.style.display = 'block';
+                categoryTitle.className = `category-title ${category.toLowerCase()}-title`;
+                
+                switch(category) {
+                    case 'General': categoryTitle.textContent = 'सामान्य वर्ग (General)'; break;
+                    case 'OBC': categoryTitle.textContent = 'अन्य पिछड़ा वर्ग (OBC)'; break;
+                    case 'EBC': categoryTitle.textContent = 'अत्यंत पिछड़ा वर्ग (EBC)'; break;
+                    case 'SC': categoryTitle.textContent = 'अनुसूचित जाति (SC)'; break;
+                    case 'ST': categoryTitle.textContent = 'अनुसूचित जनजाति (ST)'; break;
+                }
+                
+                // Check if castes exist and is an array
+                if (castes && Array.isArray(castes)) {
+                    // Loop through each caste and create a list item
+                    castes.forEach(caste => {
+                        const li = document.createElement('li');
+                        li.className = `caste-item ${category.toLowerCase()}-item`;
+                        li.textContent = caste;
+                        casteList.appendChild(li);
+                    });
+                    
+                    // Show statistics
+                    statsElement.style.display = 'block';
+                    statsElement.textContent = `कुल जातियाँ: ${castes.length}`;
+                }
+            }
+        } else {
+            placeholderText.style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
