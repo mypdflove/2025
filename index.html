@@ -6,7 +6,6 @@
     <title>Love My PDF</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
     <style>
         :root {
             --primary-color: #e53935;
@@ -190,6 +189,8 @@
         .icon.watermark, .icon.unlock, .icon.html-to-pdf { background-color: #ec407a; }
         .icon.rotate, .icon.crop { background-color: #7e57c2; }
         .icon.image-convert { background-color: #5c6bc0; }
+        /* New Caste Category icon color */
+        .icon.caste { background-color: #f44336; }
         
         /* Modal & Form Styling */
         .form-group { 
@@ -265,9 +266,7 @@
             .tool-card .icon {
                 margin: 0 auto 10px;
             }
-            .tool-card-text p {
-                display: none; /* Hides description for a cleaner look on very small screens */
-            }
+            /* REMOVED: `display: none;` rule for p tag */
         }
     </style>
 </head>
@@ -423,7 +422,7 @@
             { name: 'Combine PDF', description: 'Merge multiple PDF files into a single document.', icon: 'fas fa-compress-arrows-alt', colorClass: 'merge', filename: 'combine-pdf.html' },
             { name: 'PDF to Word', description: 'Convert your PDF to an editable Word document.', icon: 'fas fa-file-word', colorClass: 'pdf-to-word', filename: 'pdf-to-word.html' },
             { name: 'Video to MP3', description: 'Extract audio from your video files and save as MP3.', icon: 'fas fa-file-audio', colorClass: 'audio-video', filename: 'video-to-mp3.html' },
-            { name: 'Crop Image', description: 'Crop images to the perfect size with our online tool.', icon: 'fas fa-crop-alt', colorClass: 'crop', filename: 'crop-image.html' }
+            { name: 'Crop Image', description: 'Crop images to the perfect size with our online tool.', icon: 'fas fa-crop-alt', colorClass: 'crop', filename: 'crop-image.html' },
             { name: 'Caste Category ', description: 'बिहार की जातियों की सूची देखें।', icon: 'fas fa-users', colorClass: 'caste', filename: 'caste-category.html' }
         ];
 
